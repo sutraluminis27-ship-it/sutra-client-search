@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sutra Luminis · Contact Finder</title>
+<style>
+:root{--bg:#0b0d12;--panel:#121620;--panel2:#171c28;--line:#232a3a;--tx:#e9e6df;--mute:#8b93a7;--gold:#d4af6a;--gold2:#f0d79b}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(1000px 520px at 85% -10%,#1b2236 0,transparent 60%),radial-gradient(800px 460px at -10% 5%,#2a2112 0,transparent 55%),var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 70px}
+header{display:flex;gap:12px;align-items:center;padding:22px 0;letter-spacing:.28em;font-size:13px;text-transform:uppercase;color:var(--gold2)}
+.logo{width:34px;height:34px;border-radius:50%;background:conic-gradient(from 200deg,var(--gold),#7a5b22,var(--gold2),var(--gold));box-shadow:0 0 24px #d4af6a55}
+.hero{text-align:center;padding:40px 0 10px}
+h1{font-size:clamp(30px,5vw,50px);font-weight:600;letter-spacing:-.02em;line-height:1.1}
+h1 span{background:linear-gradient(90deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mute);margin-top:10px}
+form{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:28px;background:var(--panel);border:1px solid var(--line);padding:10px;border-radius:20px;box-shadow:0 20px 60px #0008}
+textarea,input{background:var(--panel2);border:1px solid transparent;color:var(--tx);padding:15px 16px;border-radius:12px;font:inherit;outline:0;width:100%}
+textarea:focus,input:focus{border-color:var(--gold)}
+button{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;border:0;border-radius:12px;padding:0 26px;font:600 15px inherit;cursor:pointer;min-height:50px}
+button:disabled{opacity:.6;cursor:wait}
+#code{display:none;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.chip{font-size:12.5px;padding:5px 12px;border-radius:99px;border:1px solid var(--line);color:var(--mute);cursor:pointer;background:transparent;min-height:0;font-weight:400}
+.chip:hover{border-color:var(--gold);color:var(--gold2)}
+.opt{display:inline-flex;gap:8px;align-items:center;color:var(--mute);font-size:13px;margin-top:12px}.opt input{width:auto}
+textarea{resize:vertical;font-family:inherit}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px;flex-wrap:wrap}
+.bar .st{color:var(--mute);font-size:13px}
+.dl{display:none}
+.co{margin-top:14px}.co>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 20px;background:linear-gradient(180deg,var(--panel),#0f131c);border:1px solid var(--line);border-radius:16px}
+.co[open]>summary{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.co>summary b{font-weight:600}.badges{display:flex;gap:6px;flex-wrap:wrap}.bd{font-size:11px;padding:2px 9px;border-radius:99px;border:1px solid #d4af6a40;color:var(--gold2);background:#d4af6a1c}.bd.w{color:var(--mute);border-color:var(--line);background:transparent}
+.cbody{padding:16px 20px 6px;border:1px solid var(--line);border-top:0;border-radius:0 0 16px 16px;background:#0f131c}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+.card{background:linear-gradient(180deg,var(--panel),#0f131c);border:1px solid var(--line);border-radius:16px;padding:20px;animation:up .4s both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card h3{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;justify-content:space-between}
+.card h3 small{color:var(--mute);letter-spacing:0;text-transform:none}
+.row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.row:hover{border-color:var(--gold)}
+.ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#1a1306;background:linear-gradient(135deg,var(--gold2),var(--gold))}
+.v{font-weight:500;word-break:break-all}.l{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
+.row div:nth-child(2){min-width:0;flex:1}
+.cp{min-height:0;padding:6px 12px;font-size:12px;background:transparent;color:var(--gold2);border:1px solid #d4af6a55}
+.empty{color:var(--mute);font-size:13px}
+.sk{height:180px;border-radius:16px;background:linear-gradient(90deg,var(--panel) 25%,var(--panel2) 50%,var(--panel) 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.err{margin:24px auto;max-width:560px;text-align:center;color:#ff9b9b;border:1px solid #5a2a2a;background:#2a1414;padding:14px;border-radius:12px}
+.note{text-align:center;color:var(--mute);font-size:12px;margin-top:18px}
+@media(max-width:760px){form,.cols{grid-template-columns:1fr}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo"></div>Sutra Luminis</header>
+  <section class="hero">
+    <h1>Phone &amp; email, <span>instantly.</span></h1>
+    <p>Searches the Sutra Vault first. Not satisfied? Search the web for that one. Download as Excel.</p>
+    <form id="f" autocomplete="off">
+      <textarea id="names" rows="4" placeholder="One company or person per line&#10;Add a project after | if needed&#10;e.g.  Hiranandani | Branded Apartments" required></textarea>
+      <button id="go">Search vault</button>
+    </form>
+
+    <input id="code" type="password" placeholder="Access code">
+  </section>
+  <main id="out"></main>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+if(ls.get('code'))$('#code').value=ls.get('code');
+const MAX=25;let RES=[];
+$('#out').onclick=async e=>{const t=e.target.closest('.web');if(t){t.disabled=true;t.textContent='Searching web…';const r=RES[+t.dataset.i];r.web=true;await one(r,true);return}
+  const v=e.target.dataset.cp;if(v==null)return;navigator.clipboard.writeText(v).then(()=>{e.target.textContent='Copied';setTimeout(()=>e.target.textContent='Copy',1200)})};
+
+const row=(ic,href,x)=>`<div class="row"><div class="ic">${ic}</div><div><a class="v" href="${href}">${esc(x.value)}</a><div class="l">${esc(x.label||'')}${x.label&&x.source?' · ':''}${esc(x.source)}</div></div><button type="button" class="cp" data-cp="${esc(x.value)}">Copy</button></div>`;
+const vrow=v=>`<div class="row"><div class="ic">V</div><div><div class="v">${esc(v.person||'')}${v.designation?' · '+esc(v.designation):''}</div><div class="l">${esc(v.company||'')}${v.city?' · '+esc(v.city):''}</div>${v.phone?`<a class="l" style="display:block;color:var(--gold2)" href="tel:${esc(String(v.phone).replace(/[^\d+]/g,''))}">${esc(v.phone)}</a>`:''}${v.email?`<a class="l" style="display:block;color:var(--gold2)" href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</div></div>`;
+
+function card(r){
+  const id='co'+r.i;let el=document.getElementById(id);
+  if(!el){el=document.createElement('details');el.id=id;el.className='co';$('#list').appendChild(el)}
+  const d=r.data;
+  if(!d){el.innerHTML=`<summary><b>${esc(r.label)}</b><div class="badges"><span class="bd w">${r.err?esc(r.err):'searching…'}</span></div></summary>`;return}
+  if(r.openNow!==false&&(RES.length===1||r.web))el.open=true;
+  el.innerHTML=`<summary><b>${esc(r.label)}</b><div class="badges"><span class="bd">${d.vault.length} vault</span><span class="bd">${d.phones.length} phone</span><span class="bd">${d.emails.length} email</span><span class="bd w">${d.webDone?d.credits+' credits · saved to Supabase':'vault'+(d.phones.length+d.emails.length?' + saved web':'')+' · 0 credits'}</span></div></summary>
+  <div class="cbody">${d.vault.length?`<h3 style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Sutra Vault</h3>${d.vault.map(vrow).join('')}`:''}
+  <div class="cols" style="margin-top:${d.vault.length?'14':'0'}px">
+   <div><h3 style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Phone</h3>${d.phones.map(x=>row('&#9742;','tel:'+esc(x.value.replace(/[^\d+]/g,'')),x)).join('')||'<div class="empty">None found.</div>'}</div>
+   <div><h3 style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Email</h3>${d.emails.map(x=>row('@','mailto:'+esc(x.value),x)).join('')||'<div class="empty">None found.</div>'}</div></div>
+  <div style="margin:6px 0 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="cp web" data-i="${r.i}" style="padding:9px 16px;font-size:13px">&#127760; ${d.webDone?'Search web again':'Not satisfied? Search web'} (3–4 credits)</button>${d.savedAt&&!d.webDone?`<span class="empty">web results saved ${esc(new Date(d.savedAt).toLocaleDateString())}</span>`:''}</div>
+  ${(d.warn||[]).length?`<div class="note">⚠ ${esc(d.warn.join('; '))}</div>`:''}</div>`;
+}
+
+async function one(r,web){
+  try{
+    const res=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json','x-access-code':$('#code').value},body:JSON.stringify({name:r.name,extra:r.extra,web:!!web})});
+    const d=await res.json();
+    if(res.status===401){$('#code').style.display='block';$('#code').focus();throw new Error('Access code required')}
+    if(!res.ok)throw new Error(d.error||'Failed');
+    if(web)d.webDone=true;
+    r.data=d;r.err='';
+  }catch(x){r.err=x.message;if(web&&r.data)r.data.warn=[...(r.data.warn||[]),x.message]}
+  card(r);status();
+}
+function status(){const done=RES.filter(r=>r.data||r.err).length;$('#st').textContent=done+' / '+RES.length+' done';$('#dl').style.display=RES.some(r=>r.data)?'inline-block':'none'}
+
+$('#f').onsubmit=async e=>{
+  e.preventDefault();
+  const items=[...new Set($('#names').value.split(/\n|;/).map(s=>s.trim()).filter(Boolean))].slice(0,MAX).map((l,i)=>{const [n,...p]=l.split('|');return{i,label:l,name:n.trim(),extra:p.join(' ').trim()}});
+  if(!items.length)return;
+  ls.set('code',$('#code').value);
+  RES=items;$('#go').disabled=true;$('#go').textContent='Searching…';
+  $('#out').innerHTML='<div class="bar"><div class="st" id="st"></div><button type="button" class="cp dl" id="dl" style="display:none;padding:10px 18px;font-size:13px">&#8681; Download Excel</button></div><div id="list"></div>';
+  $('#dl').onclick=download;
+  RES.forEach(card);status();
+  let n=0;
+  await Promise.all([0,1,2,3].map(async()=>{while(n<RES.length){await one(RES[n++],false)}}));
+  $('#go').disabled=false;$('#go').textContent='Search vault';
+  const miss=RES.filter(r=>r.data&&!r.data.vault.length&&!r.data.phones.length&&!r.data.emails.length);
+  if(miss.length){const b=document.createElement('button');b.type='button';b.className='cp';b.style.cssText='padding:10px 18px;font-size:13px';b.textContent='\u{1F310} Web-search the '+miss.length+' with no result';b.onclick=async()=>{b.disabled=true;b.textContent='Searching web…';let m=0;await Promise.all([0,1].map(async()=>{while(m<miss.length){const r=miss[m++];r.web=true;await one(r,true)}}));b.remove()};$('#st').after(b)}
+};
+
+function download(){
+  const rows=[],sum=[];
+  RES.forEach(r=>{const d=r.data;
+    if(!d){sum.push({Search:r.label,Vault:'',Phones:'',Emails:'',Status:r.err||'not run'});return}
+    sum.push({Search:r.label,Vault:d.vault.length,Phones:d.phones.length,Emails:d.emails.length,Status:d.from==='saved'?'From saved':'Searched web'});
+    d.vault.forEach(v=>rows.push({Search:r.label,Origin:'Sutra Vault',Person:v.person||'',Designation:v.designation||'',Company:v.company||'',City:v.city||'',Phone:v.phone||'',Email:v.email||'',Source:v.src||'',Link:''}));
+    d.phones.forEach(x=>rows.push({Search:r.label,Origin:'Web',Person:'',Designation:'',Company:x.label||'',City:'',Phone:x.value,Email:'',Source:x.source||'',Link:x.link||''}));
+    d.emails.forEach(x=>rows.push({Search:r.label,Origin:'Web',Person:'',Designation:'',Company:x.label||'',City:'',Phone:'',Email:x.value,Source:x.source||'',Link:x.link||''}));
+  });
+  const name='Sutra_contacts_'+new Date().toISOString().slice(0,10);
+  if(window.XLSX){
+    const wb=XLSX.utils.book_new();
+    const w1=XLSX.utils.json_to_sheet(rows);w1['!cols']=[28,14,22,20,28,14,20,28,16,36].map(w=>({wch:w}));
+    const w2=XLSX.utils.json_to_sheet(sum);w2['!cols']=[40,8,8,8,16].map(w=>({wch:w}));
+    XLSX.utils.book_append_sheet(wb,w1,'Contacts');XLSX.utils.book_append_sheet(wb,w2,'Summary');
+    XLSX.writeFile(wb,name+'.xlsx');
+  }else{
+    const cols=Object.keys(rows[0]||{Search:1});const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+    const csv=[cols.join(','),...rows.map(r=>cols.map(c=>q(r[c])).join(','))].join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name+'.csv';a.click();
+  }
+}
+</script>
+</body>
+</html>
