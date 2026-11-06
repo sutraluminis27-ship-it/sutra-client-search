@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sutra Luminis · Contact Finder</title>
+<style>
+:root{--bg:#0b0d12;--panel:#121620;--panel2:#171c28;--line:#232a3a;--tx:#e9e6df;--mute:#8b93a7;--gold:#d4af6a;--gold2:#f0d79b}
+*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(1000px 520px at 85% -10%,#1b2236 0,transparent 60%),radial-gradient(800px 460px at -10% 5%,#2a2112 0,transparent 55%),var(--bg);color:var(--tx);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 70px}
+header{display:flex;gap:12px;align-items:center;padding:22px 0;letter-spacing:.28em;font-size:13px;text-transform:uppercase;color:var(--gold2)}
+.logo{width:34px;height:34px;border-radius:50%;background:conic-gradient(from 200deg,var(--gold),#7a5b22,var(--gold2),var(--gold));box-shadow:0 0 24px #d4af6a55}
+.hero{text-align:center;padding:40px 0 10px}
+h1{font-size:clamp(30px,5vw,50px);font-weight:600;letter-spacing:-.02em;line-height:1.1}
+h1 span{background:linear-gradient(90deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mute);margin-top:10px}
+form{display:grid;grid-template-columns:1.2fr 1fr auto;gap:10px;margin-top:28px;background:var(--panel);border:1px solid var(--line);padding:10px;border-radius:20px;box-shadow:0 20px 60px #0008}
+input{background:var(--panel2);border:1px solid transparent;color:var(--tx);padding:15px 16px;border-radius:12px;font:inherit;outline:0;width:100%}
+input:focus{border-color:var(--gold)}
+button{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1306;border:0;border-radius:12px;padding:0 26px;font:600 15px inherit;cursor:pointer;min-height:50px}
+button:disabled{opacity:.6;cursor:wait}
+#code{display:none;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.chip{font-size:12.5px;padding:5px 12px;border-radius:99px;border:1px solid var(--line);color:var(--mute);cursor:pointer;background:transparent;min-height:0;font-weight:400}
+.chip:hover{border-color:var(--gold);color:var(--gold2)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
+.card{background:linear-gradient(180deg,var(--panel),#0f131c);border:1px solid var(--line);border-radius:16px;padding:20px;animation:up .4s both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card h3{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;justify-content:space-between}
+.card h3 small{color:var(--mute);letter-spacing:0;text-transform:none}
+.row{display:flex;align-items:center;gap:12px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+.row:hover{border-color:var(--gold)}
+.ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#1a1306;background:linear-gradient(135deg,var(--gold2),var(--gold))}
+.v{font-weight:500;word-break:break-all}.l{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
+.row div:nth-child(2){min-width:0;flex:1}
+.cp{min-height:0;padding:6px 12px;font-size:12px;background:transparent;color:var(--gold2);border:1px solid #d4af6a55}
+.empty{color:var(--mute);font-size:13px}
+.sk{height:180px;border-radius:16px;background:linear-gradient(90deg,var(--panel) 25%,var(--panel2) 50%,var(--panel) 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.err{margin:24px auto;max-width:560px;text-align:center;color:#ff9b9b;border:1px solid #5a2a2a;background:#2a1414;padding:14px;border-radius:12px}
+.note{text-align:center;color:var(--mute);font-size:12px;margin-top:18px}
+@media(max-width:760px){form,.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo"></div>Sutra Luminis</header>
+  <section class="hero">
+    <h1>Phone &amp; email, <span>instantly.</span></h1>
+    <p>Type a company or a person. Add a project or company to narrow it.</p>
+    <form id="f" autocomplete="off">
+      <input id="name" placeholder="Company or person  e.g. Rajan Bedi" required>
+      <input id="extra" placeholder="Company / project (optional)">
+      <button id="go">Find</button>
+    </form>
+    <input id="code" type="password" placeholder="Access code">
+    <div class="chips" id="recent"></div>
+  </section>
+  <main id="out"></main>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+let hist=[];try{hist=JSON.parse(ls.get('hist')||'[]')}catch{}
+const rec=()=>$('#recent').innerHTML=hist.map((h,i)=>`<button type="button" class="chip" data-i="${i}">${esc(h.name)}${h.extra?' · '+esc(h.extra):''}</button>`).join('');
+$('#recent').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;$('#name').value=hist[i].name;$('#extra').value=hist[i].extra;$('#f').requestSubmit()};
+rec();if(ls.get('code'))$('#code').value=ls.get('code');
+$('#out').onclick=e=>{const v=e.target.dataset.cp;if(v==null)return;navigator.clipboard.writeText(v).then(()=>{e.target.textContent='Copied';setTimeout(()=>e.target.textContent='Copy',1200)})};
+
+$('#f').onsubmit=async e=>{
+  e.preventDefault();
+  const name=$('#name').value.trim(),extra=$('#extra').value.trim();if(!name)return;
+  $('#go').disabled=true;$('#go').textContent='Searching…';
+  $('#out').innerHTML='<div class="cols"><div class="sk"></div><div class="sk"></div></div>';
+  const refreshed=$('#f').dataset.refresh;
+  try{
+    const r=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json','x-access-code':$('#code').value},body:JSON.stringify({name,extra,refresh:$('#f').dataset.refresh==='1'})});
+    const d=await r.json();
+    if(r.status===401){$('#code').style.display='block';$('#code').focus()}
+    if(!r.ok)throw new Error(d.error||'Failed');
+    ls.set('code',$('#code').value);
+    hist=[{name,extra},...hist.filter(h=>!(h.name===name&&h.extra===extra))].slice(0,6);ls.set('hist',JSON.stringify(hist));rec();
+    const row=(ic,href,x)=>`<div class="row"><div class="ic">${ic}</div><div><a class="v" href="${href}">${esc(x.value)}</a><div class="l">${esc(x.label||'')}${x.label&&x.source?' · ':''}${esc(x.source)}</div></div><button class="cp" data-cp="${esc(x.value)}">Copy</button></div>`;
+    const vrows=(d.vault||[]).map(v=>`<div class="row"><div class="ic">V</div><div><div class="v">${esc(v.person||'')}${v.designation?' · '+esc(v.designation):''}</div><div class="l">${esc(v.company||'')}${v.city?' · '+esc(v.city):''}</div>${v.phone?`<a class="l" style="display:block;color:var(--gold2)" href="tel:${esc(String(v.phone).replace(/[^\d+]/g,''))}">${esc(v.phone)}</a>`:''}${v.email?`<a class="l" style="display:block;color:var(--gold2)" href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</div></div>`).join('');
+    $('#out').innerHTML=(vrows?`<div class="card" style="margin-top:28px"><h3>Sutra Vault <small>${d.vault.length} match${d.vault.length>1?'es':''}</small></h3>${vrows}</div>`:'')+`<div class="cols">
+      <div class="card"><h3>Phone <small>${d.phones.length}</small></h3>${d.phones.map(x=>row('&#9742;','tel:'+esc(x.value.replace(/[^\d+]/g,'')),x)).join('')||'<div class="empty">No number found. Add the city or company.</div>'}</div>
+      <div class="card" style="animation-delay:.08s"><h3>Email <small>${d.emails.length}</small></h3>${d.emails.map(x=>row('@','mailto:'+esc(x.value),x)).join('')||'<div class="empty">No email found publicly.</div>'}</div></div>
+      <div class="note">${d.from==='saved'?'From saved results ('+new Date(d.savedAt).toLocaleDateString()+') · 0 credits · <a href="#" id="rf" style="color:var(--gold2)">refresh from web</a>':d.credits+' Serper credits · '+(d.pushed||0)+' saved to Supabase'} · public sources, verify before use${(d.warn||[]).length?'<br>⚠ '+esc(d.warn.join('; ')):''}</div>`;
+    const rf=$('#rf');if(rf)rf.onclick=ev=>{ev.preventDefault();$('#f').dataset.refresh='1';$('#f').requestSubmit()};
+  }catch(x){$('#out').innerHTML=`<div class="err">${esc(x.message)}</div>`}
+  $('#f').dataset.refresh='';$('#go').disabled=false;$('#go').textContent='Find';
+};
+</script>
+</body>
+</html>
